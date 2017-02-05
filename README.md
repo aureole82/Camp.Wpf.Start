@@ -7,12 +7,27 @@ Here are some tiny but important steps I'd like to demonstrate how you achieve i
 The `MainWindow` is your first view! Add a simple class `MainViewModel` to provide a data context:
 
 ```xml
-    <Window ...
-            xmlns:vm="clr-namespace:Camp.Wpf.Start.ViewModels">
-        <Window.DataContext>
-            <vm:MainViewModel />
-        </Window.DataContext>
-    </Window>
+<Window ...
+        xmlns:vm="clr-namespace:Camp.Wpf.Start.ViewModels">
+    <Window.DataContext>
+        <vm:MainViewModel />
+    </Window.DataContext>
+</Window>
 ```
 
 That's all you need to display the properties of the ViewModel: `<TextBlock Text="{Binding Greeting}" />`
+
+## ViewModels and INotifyPropertyChanged
+Implementing `INotifyPropertyChanged` notifies the View about updates.
+```cs
+public class ObservableModel : INotifyPropertyChanged
+{
+    public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+    {
+        PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
+    }
+}
+```
+Don't forget to derive from `public class MainViewModel : ObservableModel {...}`!
