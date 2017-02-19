@@ -25,6 +25,7 @@ public class ObservableModel : INotifyPropertyChanged
     public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
     /// <summary> Notifies that the property of this instance has changed. </summary>
+    [Obsolete("Use SetProperty<T>()")]
     protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
     {
         PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
@@ -39,6 +40,54 @@ protected virtual void SetProperty<T>(ref T field, T value, [CallerMemberName] s
     if (Equals(field, value)) return;
 
     field = value;
-    OnPropertyChanged(propertyName);
+    PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
 }
 ```
+
+## ViewModels and INotifyDataErrorInfo
+Implementing `INotifyDataErrorInfo` notifies the View about invalid data inside bound ViewModels and Models.
+```cs
+public class ValidatedObservableModel : ObservableModel, INotifyDataErrorInfo
+{
+    private readonly IDictionary<string, string[]> _errors = new Dictionary<string, string[]>();
+
+    public IEnumerable GetErrors(string propertyName)
+    {
+        string[] errors;
+        _errors.TryGetValue(propertyName, out errors);
+        return errors ?? new string[] {};
+    }
+
+    public bool HasErrors => _errors.Any();
+    public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged = delegate { };
+
+    protected override void SetProperty<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
+    {
+        base.SetProperty(ref field, value, propertyName);
+        ValidateProperty(value, propertyName);
+    }
+
+    private void ValidateProperty<T>(T value, string propertyName)
+    {
+        var validationResults = new List<ValidationResult>();
+        Validator.TryValidateProperty(
+            value,
+            new ValidationContext(this) { MemberName = propertyName },
+            validationResults
+        );
+
+        if (validationResults.Any())
+        {
+            _errors[propertyName] = validationResults
+                .Select(result => result.ErrorMessage)
+                .ToArray();
+        }
+        else
+        {
+            _errors.Remove(propertyName);
+        }
+        ErrorsChanged(this, new DataErrorsChangedEventArgs(propertyName));
+    }
+}
+```
+Note: The usage of `OnPropertyChanged()` would bypass validation that's why I don't support it anymore. Just use `SetProperty()` furthermore!

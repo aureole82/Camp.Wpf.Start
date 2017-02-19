@@ -1,11 +1,13 @@
-﻿using Camp.Wpf.Start.Architecture;
+﻿using System.ComponentModel.DataAnnotations;
+using Camp.Wpf.Start.Architecture;
 
 namespace Camp.Wpf.Start.ViewModels
 {
-    public class MainViewModel : ObservableModel
+    public class MainViewModel : ValidatedObservableModel
     {
+        private string _email = "email";
         private string _greeting = "Hello, this is brought to you by the ViewModel and DataBinding.";
-        private string _input = "(enter your name here)";
+        private string _name = "(enter your name here)";
 
         public string Greeting
         {
@@ -13,13 +15,22 @@ namespace Camp.Wpf.Start.ViewModels
             set { SetProperty(ref _greeting, value); }
         }
 
-        public string Input
+        [EmailAddress]
+        public string Email
         {
-            get { return _input; }
+            get { return _email; }
+            set { SetProperty(ref _email, value); }
+        }
+
+        [Required]
+        [MinLength(3)]
+        public string Name
+        {
+            get { return _name; }
             set
             {
-                SetProperty(ref _input, value);
-                Greeting = $"Hello, {_input}";
+                SetProperty(ref _name, value);
+                Greeting = $"Hello, {_name}";
             }
         }
     }
