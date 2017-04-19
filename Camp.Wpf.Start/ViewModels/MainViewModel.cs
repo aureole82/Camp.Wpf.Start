@@ -10,13 +10,7 @@ namespace Camp.Wpf.Start.ViewModels
         public string Greeting
         {
             get { return _greeting; }
-            set
-            {
-                if (_greeting == value) return;
-
-                _greeting = value;
-                OnPropertyChanged();
-            }
+            set { SetProperty(ref _greeting, value); }
         }
 
         public string Input
@@ -24,10 +18,7 @@ namespace Camp.Wpf.Start.ViewModels
             get { return _input; }
             set
             {
-                if (_input == value) return;
-
-                _input = value;
-                OnPropertyChanged();
+                SetProperty(ref _input, value);
                 Greeting = $"Hello, {_input}";
             }
         }
