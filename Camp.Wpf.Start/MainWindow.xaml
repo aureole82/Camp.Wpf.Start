@@ -27,5 +27,6 @@
         <Label Target="{Binding ElementName=EmailTextBox}" Content="_Email:" />
         <TextBox x:Name="EmailTextBox" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                  Style="{StaticResource ValidatedControlStyle}" />
+        <Button Content="{Binding ClickMessage}" Command="{Binding ClickedCommand}" />
     </StackPanel>
 </Window>
