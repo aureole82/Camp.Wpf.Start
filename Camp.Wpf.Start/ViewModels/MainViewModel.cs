@@ -7,6 +7,7 @@ namespace Camp.Wpf.Start.ViewModels
     public class MainViewModel : ValidatedObservableModel
     {
         private string _clickMessage = "Click me";
+        private string _dropMessage = "Drop files here...";
         private string _email = "email";
         private string _greeting = "Hello, this is brought to you by the ViewModel and DataBinding.";
         private string _name = "(enter your name here)";
@@ -14,6 +15,7 @@ namespace Camp.Wpf.Start.ViewModels
         public MainViewModel()
         {
             ClickedCommand = new RelayCommand(Clicked, CanClick);
+            DropCommand = new RelayCommand(Dropped);
         }
 
         public string Greeting
@@ -47,7 +49,14 @@ namespace Camp.Wpf.Start.ViewModels
             set { SetProperty(ref _clickMessage, value); }
         }
 
+        public string DropMessage
+        {
+            get { return _dropMessage; }
+            set { SetProperty(ref _dropMessage, value); }
+        }
+
         public ICommand ClickedCommand { get; }
+        public ICommand DropCommand { get; }
 
         private bool CanClick()
         {
@@ -57,6 +66,11 @@ namespace Camp.Wpf.Start.ViewModels
         private void Clicked()
         {
             ClickMessage = "Thanks!";
+        }
+
+        private void Dropped()
+        {
+            DropMessage = "Thanks for sharing!";
         }
     }
 }

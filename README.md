@@ -1,5 +1,5 @@
 # Camp.Wpf.Start
-This is a lightweight desktop application to study WPF and MVVM. It follows my experiences and recommendation having a good [Software Architecture @ Desktop](http://devsofa.blogspot.de/2017/01/software-architecture-desktop.html).
+This is a lightweight desktop application to study WPF and MVVM. It follows my experiences and recommendation having a good [Software Architecture @ Desktop](https://devsofa.blogspot.de/2017/01/software-architecture-desktop.html).
 
 Here are some tiny but important steps I'd like to demonstrate how you achieve it. Follow and adapt it where appropriate...
 
@@ -139,4 +139,20 @@ public class RelayCommand : RelayCommand<object>
     {
     }
 }
+```
+
+## ViewModels and Events
+
+Hook up `ICommand` properties on events by simply referencing the `System.Windows.Interactivity` assembly from the Blend SDK ([more details here](https://devsofa.blogspot.de/2017/05/viewmodels-and-events.html)):
+
+```xml
+<TextBlock xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+           Text="{Binding DropMessage}"
+           AllowDrop="True">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Drop">
+            <i:InvokeCommandAction Command="{Binding DropCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+</TextBlock>
 ```

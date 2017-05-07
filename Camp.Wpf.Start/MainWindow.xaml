@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Camp.Wpf.Start.ViewModels"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         mc:Ignorable="d"
         Title="DevSofa: Hands on WPF and MVVM." Height="350" Width="525">
     <Window.DataContext>
@@ -28,5 +29,14 @@
         <TextBox x:Name="EmailTextBox" Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"
                  Style="{StaticResource ValidatedControlStyle}" />
         <Button Content="{Binding ClickMessage}" Command="{Binding ClickedCommand}" />
+        <TextBlock Background="LightSteelBlue" Margin="10" Padding="10"
+                   Text="{Binding DropMessage}"
+                   AllowDrop="True">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="Drop">
+                    <i:InvokeCommandAction Command="{Binding DropCommand}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </TextBlock>
     </StackPanel>
 </Window>
