@@ -51,6 +51,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Architecture\EventToCommand.cs" />
     <Compile Include="Architecture\ObservableModel.cs" />
     <Compile Include="Architecture\RelayCommand.cs" />
     <Compile Include="Architecture\ValidatedObservableModel.cs" />

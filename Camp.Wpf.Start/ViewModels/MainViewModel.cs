@@ -1,4 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using Camp.Wpf.Start.Architecture;
 
@@ -15,7 +18,7 @@ namespace Camp.Wpf.Start.ViewModels
         public MainViewModel()
         {
             ClickedCommand = new RelayCommand(Clicked, CanClick);
-            DropCommand = new RelayCommand(Dropped);
+            DropCommand = new RelayCommand<DragEventArgs>(Dropped);
         }
 
         public string Greeting
@@ -68,9 +71,16 @@ namespace Camp.Wpf.Start.ViewModels
             ClickMessage = "Thanks!";
         }
 
-        private void Dropped()
+        private void Dropped(DragEventArgs e)
         {
-            DropMessage = "Thanks for sharing!";
+            var fileNames = e.Data.GetData(DataFormats.FileDrop) as string[];
+            if (fileNames == null || !fileNames.Any())
+            {
+                DropMessage = "No file(s) dropped";
+                return;
+            }
+
+            DropMessage = string.Join(Environment.NewLine, fileNames);
         }
     }
 }

@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:vm="clr-namespace:Camp.Wpf.Start.ViewModels"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:a="clr-namespace:Camp.Wpf.Start.Architecture"
         mc:Ignorable="d"
         Title="DevSofa: Hands on WPF and MVVM." Height="350" Width="525">
     <Window.DataContext>
@@ -34,7 +35,7 @@
                    AllowDrop="True">
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="Drop">
-                    <i:InvokeCommandAction Command="{Binding DropCommand}" />
+                    <a:EventToCommand Command="{Binding DropCommand}" />
                 </i:EventTrigger>
             </i:Interaction.Triggers>
         </TextBlock>
