@@ -156,3 +156,49 @@ Hook up `ICommand` properties on events by simply referencing the `System.Window
     </i:Interaction.Triggers>
 </TextBlock>
 ```
+
+In some cases you need the `EventArgs` (`DragEventArgs` to get dropped files or `SelectionChangedEventArgs` to get un/selected items of a `ComboBox`). Since `InvokeCommandAction` won't pass those ones the following `EventToCommand` implementation helps to convert events data to a simple POCO and to pass it to the ViewModels `RelayCommand` (so you don't need dependencies like `System.Windows`):
+
+```cs
+public class EventToCommand : TriggerAction<DependencyObject>
+{
+    public static readonly DependencyProperty CommandProperty
+        = DependencyProperty.Register("Command", typeof(ICommand), typeof(EventToCommand), new PropertyMetadata(default(ICommand)));
+
+    public ICommand Command
+    {
+        get { return (ICommand) GetValue(CommandProperty); }
+        set { SetValue(CommandProperty, value); }
+    }
+
+    public static readonly DependencyProperty EventArgsConverterProperty
+        = DependencyProperty.Register("EventArgsConverter", typeof(IEventArgsConverter), typeof(EventToCommand), new PropertyMetadata(default(IEventArgsConverter)));
+
+    public IEventArgsConverter EventArgsConverter
+    {
+        get { return (IEventArgsConverter) GetValue(EventArgsConverterProperty); }
+        set { SetValue(EventArgsConverterProperty, value); }
+    }
+
+    protected override void Invoke(object parameter)
+    {
+        if (EventArgsConverter != null)
+            parameter = EventArgsConverter.Convert(parameter as EventArgs);
+
+        if (Command?.CanExecute(parameter) != true)
+            return;
+
+        Command.Execute(parameter);
+    }
+}
+```
+
+Implement your converter by using this interface and provide it as a static resource:
+
+``` cs
+public interface IEventArgsConverter
+{
+    object Convert(EventArgs args);
+}
+```
+

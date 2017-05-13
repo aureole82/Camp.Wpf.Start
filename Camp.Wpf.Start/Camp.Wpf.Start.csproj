@@ -52,9 +52,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Architecture\EventToCommand.cs" />
+    <Compile Include="Architecture\IEventArgsConverter.cs" />
     <Compile Include="Architecture\ObservableModel.cs" />
     <Compile Include="Architecture\RelayCommand.cs" />
     <Compile Include="Architecture\ValidatedObservableModel.cs" />
+    <Compile Include="Converter\DropFilesEventArgsConverter.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
